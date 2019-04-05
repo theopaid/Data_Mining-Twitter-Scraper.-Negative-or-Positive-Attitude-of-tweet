@@ -6,6 +6,8 @@ import string
 import pandas as pd
 import csv
 import re
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 
 def remove_punct(text):
     text = "".join([char for char in text if char not in string.punctuation])
@@ -31,5 +33,47 @@ for currentLine in train_data['tokenized_text']:
     train_data['tokenized_text'][count] = filtered_sentence
 
 print(train_data)
+
+TokensForPositive = []
+TokensForNegative = []
+TokensForNeutral = []
+
+for index, row in train_data.iterrows():
+    if row['feeling'] == 'positive':
+        TokensForPositive.append(row['tokenized_text'])
+    if row['feeling'] == 'negative':
+        TokensForNegative.append(row['tokenized_text'])
+    if row['feeling'] == 'neutral':
+        TokensForNeutral.append(row['tokenized_text'])
+
+TokensForPositiveSTR = ' '.join(word for line in TokensForPositive for word in line)
+TokensForNegativeSTR = ' '.join(word for line in TokensForNegative for word in line)
+TokensForNeutralSTR = ' '.join(word for line in TokensForNeutral for word in line)
+
+wordcloud = WordCloud(max_font_size=40).generate(train_data['tokenized_text'].to_string())
+plt.figure()
+plt.imshow(wordcloud, interpolation="bilinear")
+plt.axis("off")
+plt.savefig("everything.png")
+
+wordcloud = WordCloud(max_font_size=40).generate(TokensForPositiveSTR)
+plt.figure()
+plt.imshow(wordcloud, interpolation="bilinear")
+plt.axis("off")
+plt.savefig("positive.png")
+
+wordcloud = WordCloud(max_font_size=40).generate(TokensForNegativeSTR)
+plt.figure()
+plt.imshow(wordcloud, interpolation="bilinear")
+plt.axis("off")
+plt.savefig("negative.png")
+
+wordcloud = WordCloud(max_font_size=40).generate(TokensForNeutralSTR)
+plt.figure()
+plt.imshow(wordcloud, interpolation="bilinear")
+plt.axis("off")
+plt.savefig("neutral.png")
+
+
 
 
