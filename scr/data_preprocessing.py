@@ -39,6 +39,7 @@ print(train_data)
 TokensForPositive = []
 TokensForNegative = []
 TokensForNeutral = []
+print(train_data['tokenized_text'][28060])
 
 for index, row in train_data.iterrows():
     if row['feeling'] == 'positive':
@@ -77,5 +78,12 @@ plt.axis("off")
 plt.savefig("neutral.png")
 
 
+def bag_of_words(words, feeling):
+    return dict([(word, feeling) for word in words])
 
+words_in_bag = []
+for index, row in train_data.iterrows():
+    words_in_bag.append(bag_of_words(row['tokenized_text'], row['feeling']))
+
+#print(words_in_bag)
 
